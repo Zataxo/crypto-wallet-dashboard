@@ -1,19 +1,20 @@
-import 'package:crypto_statistics/table/live_market_table.dart';
+import 'package:crypto_statistics/table/recent_transactions_table.dart';
 import 'package:flutter/material.dart';
 
-class LiveMarket extends StatelessWidget {
-  const LiveMarket({
+class LatestTransactions extends StatelessWidget {
+  const LatestTransactions({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      // color: Colors.amber,
       padding: const EdgeInsets.all(15),
-      margin: const EdgeInsets.only(bottom: 5, left: 5),
+      margin: const EdgeInsets.only(bottom: 15, left: 5),
       decoration: BoxDecoration(
-        color: const Color(0xff1B2028),
         borderRadius: BorderRadius.circular(15),
+        color: const Color(0xff1B2028),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -21,12 +22,12 @@ class LiveMarket extends StatelessWidget {
           Expanded(
             flex: 0,
             child: Text(
-              "Live Market",
+              "Recent Transaction",
               style: TextStyle(
                   color: Color(0xffFFFFFF), fontWeight: FontWeight.bold),
             ),
           ),
-          Expanded(flex: 1, child: LiveMarketTable())
+          Expanded(flex: 1, child: RecentTransactionsTable())
         ],
       ),
     );

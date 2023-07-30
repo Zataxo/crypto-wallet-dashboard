@@ -23,7 +23,8 @@ class VisaCard extends StatelessWidget {
               children: [
                 const Text(
                   "Credit Card",
-                  style: TextStyle(color: Color(0xffFFFFFF)),
+                  style: TextStyle(
+                      color: Color(0xffFFFFFF), fontWeight: FontWeight.bold),
                 ),
                 SvgPicture.asset(
                   "assets/icons/chip.svg",

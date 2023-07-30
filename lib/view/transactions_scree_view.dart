@@ -10,6 +10,11 @@ class TransactionsScreenView extends StatefulWidget {
 class _TransactionsScreenViewState extends State<TransactionsScreenView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return const Scaffold(
+      backgroundColor: Color(0xff31353F),
+      body: Center(
+        child: Text("Transactions"),
+      ),
+    );
   }
 }

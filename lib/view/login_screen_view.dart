@@ -188,7 +188,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                   Future.delayed(
                     const Duration(seconds: 2),
                     () {
-                      context.read<UtilLogic>().setButtonLoading();
+                      context.read<UtilLogic>().stopButtonLoading();
                       Navigator.push(
                           context,
                           MaterialPageRoute(

@@ -2,6 +2,7 @@ import 'package:crypto_statistics/model/coins_statistics_model.dart';
 import 'package:crypto_statistics/widget/dashboard_header.dart';
 import 'package:crypto_statistics/widget/live_market.dart';
 import 'package:crypto_statistics/widget/porfoilo.dart';
+import 'package:crypto_statistics/widget/recent_transaction.dart';
 import 'package:crypto_statistics/widget/visa_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -62,6 +63,8 @@ class _DashboardScreenViewState extends State<DashboardScreenView> {
         coinValue: 3.045,
         incrementValue: 0.25),
   ];
+  bool onHover = false;
+  int itemToBeAffected = -1;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,14 +117,12 @@ class _DashboardScreenViewState extends State<DashboardScreenView> {
                   Expanded(
                     flex: 6,
                     child: Column(
-                      children: [
+                      children: const [
                         Expanded(
                           flex: 8,
-                          child: Container(
-                              // color: Colors.amber,
-                              ),
+                          child: LatestTransactions(),
                         ),
-                        const Expanded(
+                        Expanded(
                           flex: 4,
                           child: LiveMarket(),
                         ),
@@ -138,99 +139,123 @@ class _DashboardScreenViewState extends State<DashboardScreenView> {
   }
 
   Widget _builCoinsStatistics(CoinsStatistics _statistic, index) {
-    return Container(
-      margin: const EdgeInsets.all(15),
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
+    return MouseRegion(
+      onExit: (event) {
+        onHover = false;
+        setState(() {});
+        print(onHover);
+      },
+      onEnter: (event) {
+        onHover = true;
+        itemToBeAffected = index;
+        setState(() {
+          print(onHover);
+        });
+      },
+      child: Container(
+        margin: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: const Color(0xff1B2028)),
+        child: Material(
+          color: const Color(0xff1B2028),
+          elevation: onHover && itemToBeAffected == index ? 5 : 0,
+          animationDuration: const Duration(seconds: 2),
           borderRadius: BorderRadius.circular(15),
-          color: const Color(0xff1B2028)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xff31353F)),
-                child: SvgPicture.asset(_statistic.coinLogo),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _statistic.coinName,
-                      style: const TextStyle(
-                          color: Color(0xffFFFFFF),
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Text(
-                        _statistic.coinShortcut,
-                        style: const TextStyle(color: Color(0xff9E9E9E)),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                width: 70,
-              ),
-              Icon(
-                _statistic.increment
-                    ? Icons.arrow_drop_up
-                    : Icons.arrow_drop_down,
-                color: _statistic.increment
-                    ? const Color(0xff1ECB4F)
-                    : const Color(0xffF46D22),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12.0),
-            child: Row(
+          shadowColor: const Color(0xff64CFF9),
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "\$  ${_statistic.priceInUSD}",
-                      style: const TextStyle(
-                          color: Color(0xffFFFFFF),
-                          fontWeight: FontWeight.bold),
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xff31353F)),
+                      child: SvgPicture.asset(_statistic.coinLogo),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Text(
-                        _statistic.increment
-                            ? "+ ${_statistic.incrementValue}"
-                            : "-${_statistic.incrementValue} ",
-                        style: TextStyle(
-                            color: _statistic.increment
-                                ? const Color(0xff1ECB4F)
-                                : const Color(0xffF46D22),
-                            fontWeight: FontWeight.bold),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _statistic.coinName,
+                            style: const TextStyle(
+                                color: Color(0xffFFFFFF),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text(
+                              _statistic.coinShortcut,
+                              style: const TextStyle(color: Color(0xff9E9E9E)),
+                            ),
+                          )
+                        ],
                       ),
-                    )
+                    ),
+                    const SizedBox(
+                      width: 70,
+                    ),
+                    Icon(
+                      _statistic.increment
+                          ? Icons.arrow_drop_up
+                          : Icons.arrow_drop_down,
+                      color: _statistic.increment
+                          ? const Color(0xff1ECB4F)
+                          : const Color(0xffF46D22),
+                    ),
                   ],
                 ),
-                Column(
-                  children: [
-                    SvgPicture.asset(
-                      "assets/icons/line.svg",
-                      color: _statistic.lineColor,
-                    )
-                  ],
-                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "\$  ${_statistic.priceInUSD}",
+                            style: const TextStyle(
+                                color: Color(0xffFFFFFF),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text(
+                              _statistic.increment
+                                  ? "+ ${_statistic.incrementValue}"
+                                  : "-${_statistic.incrementValue} ",
+                              style: TextStyle(
+                                  color: _statistic.increment
+                                      ? const Color(0xff1ECB4F)
+                                      : const Color(0xffF46D22),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          )
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/icons/line.svg",
+                            color: _statistic.lineColor,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
-          )
-        ],
+          ),
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:crypto_statistics/model/side_menu_model.dart';
 import 'package:crypto_statistics/view/dashboard_screen_view.dart';
+import 'package:crypto_statistics/view/login_screen_view.dart';
 import 'package:crypto_statistics/view/transactions_scree_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +16,7 @@ class _HomeTapControllerState extends State<HomeTapController> {
   final List<SideMenu> _sideMenu = [
     SideMenu(imgUrl: "assets/icons/overview.svg", name: "Overview"),
     SideMenu(imgUrl: "assets/icons/transaction.svg", name: "Transactions"),
+    SideMenu(imgUrl: "assets/icons/logout.svg", name: "Logout"),
   ];
   final List<Widget> _screens = [
     const DashboardScreenView(),
@@ -84,11 +86,20 @@ class _HomeTapControllerState extends State<HomeTapController> {
   Widget _buildSideMenu(SideMenu _component, int index) {
     return InkWell(
       onTap: () {
-        selectedComponent = index;
-        setState(() {});
+        if (index == 2) {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreenView(),
+              ),
+              (route) => false);
+        } else {
+          selectedComponent = index;
+          setState(() {});
+        }
       },
       child: Container(
-        margin: const EdgeInsets.all(15),
+        margin: const EdgeInsets.symmetric(horizontal: 15),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
