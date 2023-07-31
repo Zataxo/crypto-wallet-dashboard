@@ -1,9 +1,11 @@
 import 'package:crypto_statistics/dialog/new_transaction_dialog.dart';
 import 'package:crypto_statistics/model/pop_menu_model.dart';
+import 'package:crypto_statistics/utils/util_logic.dart';
 import 'package:crypto_statistics/view/login_screen_view.dart';
 import 'package:crypto_statistics/widget/custom_pop_menu.dart';
 import 'package:crypto_statistics/widget/custom_text_from_field.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DashboardHeader extends StatefulWidget {
   const DashboardHeader({Key? key, required this.title}) : super(key: key);
@@ -88,7 +90,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
           icon: Icons.info,
           desc: "User info",
           onPressed: () {
-            print("object");
+            ctx.read<UtilLogic>().showUserInfo();
           }),
     );
     menuItems.add(

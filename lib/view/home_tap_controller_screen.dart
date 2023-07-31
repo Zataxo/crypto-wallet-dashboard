@@ -1,8 +1,11 @@
 import 'package:crypto_statistics/model/side_menu_model.dart';
+import 'package:crypto_statistics/utils/util_logic.dart';
 import 'package:crypto_statistics/view/dashboard_screen_view.dart';
 import 'package:crypto_statistics/view/transactions_screen_view.dart';
+import 'package:crypto_statistics/widget/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 
 class HomeTapController extends StatefulWidget {
   const HomeTapController({Key? key}) : super(key: key);
@@ -67,6 +70,11 @@ class _HomeTapControllerState extends State<HomeTapController> {
                           _buildSideMenu(_sideMenu[index], index),
                     ),
                   ),
+                  const Expanded(child: SizedBox()),
+                  Expanded(
+                      child: Visibility(
+                          visible: context.watch<UtilLogic>().isinfoVisible,
+                          child: const UserInfo()))
                 ],
               ),
             ),

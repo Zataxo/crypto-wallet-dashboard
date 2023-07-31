@@ -4,6 +4,7 @@ class UtilLogic with ChangeNotifier {
   // bool isDarkMood = false;
   bool isPasswordObsecure = true;
   bool isButtonLoading = false;
+  bool isinfoVisible = false;
 
   // void changeMood() {
   //   isDarkMood = !isDarkMood;
@@ -22,6 +23,11 @@ class UtilLogic with ChangeNotifier {
 
   void stopButtonLoading() {
     isButtonLoading = false;
+    notifyListeners();
+  }
+
+  void showUserInfo() {
+    isinfoVisible = !isinfoVisible;
     notifyListeners();
   }
 }
