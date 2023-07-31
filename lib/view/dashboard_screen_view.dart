@@ -15,7 +15,6 @@ class DashboardScreenView extends StatefulWidget {
 }
 
 class _DashboardScreenViewState extends State<DashboardScreenView> {
-  final _searchable = TextEditingController();
   final List<CoinsStatistics> statisticsList = [
     CoinsStatistics(
         coinLogo: "assets/icons/btc_dashboard.svg",
@@ -74,11 +73,10 @@ class _DashboardScreenViewState extends State<DashboardScreenView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
+            const Expanded(
                 flex: 1,
                 child: DashboardHeader(
                   title: "Dashboard",
-                  search: _searchable,
                 )),
             Expanded(
                 flex: 3,
@@ -161,7 +159,7 @@ class _DashboardScreenViewState extends State<DashboardScreenView> {
         child: Material(
           color: const Color(0xff1B2028),
           elevation: onHover && itemToBeAffected == index ? 5 : 0,
-          animationDuration: const Duration(seconds: 2),
+          animationDuration: const Duration(seconds: 1),
           borderRadius: BorderRadius.circular(15),
           shadowColor: const Color(0xff64CFF9),
           child: Padding(

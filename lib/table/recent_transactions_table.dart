@@ -51,47 +51,55 @@ class RecentTransactionsTable extends StatelessWidget {
           amountTransfered: 3.5,
           coinTransfered: "SOL"),
     ];
-    return SizedBox(
-      // color: Colors.red,
-      width: double.infinity,
-      child: SingleChildScrollView(
-        child: DataTable(
-          horizontalMargin: 0,
-          columnSpacing: 10,
-          columns: const [
-            DataColumn(
-                label: Text(
-              "*",
-              style: TextStyle(color: Color(0xff9E9E9E)),
-            )),
-            DataColumn(
-                label: Text(
-              "Sender",
-              style: TextStyle(color: Color(0xff9E9E9E)),
-            )),
-            DataColumn(
-                label: Text(
-              "Receiver",
-              style: TextStyle(color: Color(0xff9E9E9E)),
-            )),
-            DataColumn(
-                label: Text(
-              "Amount",
-              style: TextStyle(color: Color(0xff9E9E9E)),
-            )),
-            DataColumn(
-                label: Text(
-              " ",
-              style: TextStyle(color: Color(0xff9E9E9E)),
-            )),
-            DataColumn(
-                label: Text(
-              "Coin",
-              style: TextStyle(color: Color(0xff9E9E9E)),
-            )),
-          ],
-          rows: List.generate(_transactionsList.length,
-              (index) => _buildDataRow(_transactionsList[index], index)),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        // color: Colors.red,
+        width: double.infinity,
+        child: SingleChildScrollView(
+          child: DataTable(
+            horizontalMargin: 0,
+            columnSpacing: 10,
+            columns: const [
+              DataColumn(
+                  label: Text(
+                "*",
+                style: TextStyle(color: Color(0xff9E9E9E)),
+              )),
+              DataColumn(
+                  label: Text(
+                "Sender",
+                style: TextStyle(color: Color(0xff9E9E9E)),
+              )),
+              DataColumn(
+                  label: Text(
+                "Receiver",
+                style: TextStyle(color: Color(0xff9E9E9E)),
+              )),
+              DataColumn(
+                  label: Text(
+                "Amount",
+                style: TextStyle(color: Color(0xff9E9E9E)),
+              )),
+              DataColumn(
+                  label: Text(
+                " ",
+                style: TextStyle(color: Color(0xff9E9E9E)),
+              )),
+              DataColumn(
+                  label: Text(
+                "Coin",
+                style: TextStyle(color: Color(0xff9E9E9E)),
+              )),
+              DataColumn(
+                  label: Text(
+                "Date",
+                style: TextStyle(color: Color(0xff9E9E9E)),
+              )),
+            ],
+            rows: List.generate(_transactionsList.length,
+                (index) => _buildDataRow(_transactionsList[index], index)),
+          ),
         ),
       ),
     );
@@ -118,6 +126,10 @@ class RecentTransactionsTable extends StatelessWidget {
         DataCell(Text(
           _model.coinTransfered,
           style: const TextStyle(color: Color(0xffFFFFFF)),
+        )),
+        const DataCell(Text(
+          "01/08/2023",
+          style: TextStyle(color: Color(0xffFFFFFF)),
         )),
       ]);
 }

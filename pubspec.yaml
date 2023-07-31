@@ -35,6 +35,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.5
   flutter_svg: ^1.0.3
+  loading_animation_widget: ^1.2.0+4
+  custom_pop_up_menu: ^1.2.3+1
+  dropdown_button2: ^1.4.0
 
 dev_dependencies:
   flutter_test:

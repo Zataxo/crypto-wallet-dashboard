@@ -1,5 +1,6 @@
 import 'package:crypto_statistics/utils/util_logic.dart';
 import 'package:crypto_statistics/view/login_screen_view.dart';
+import 'package:crypto_statistics/view_model/dashboard_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,10 @@ class Dashboard extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => UtilLogic(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DashboardViewModel(),
+        ),
       ],
       child: Builder(builder: (context) {
         return MaterialApp(

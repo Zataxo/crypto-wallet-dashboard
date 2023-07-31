@@ -2,11 +2,18 @@ import 'package:crypto_statistics/model/coins_statistics_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class PersonalAccounts extends StatelessWidget {
+class PersonalAccounts extends StatefulWidget {
   const PersonalAccounts({
     Key? key,
   }) : super(key: key);
 
+  @override
+  State<PersonalAccounts> createState() => _PersonalAccountsState();
+}
+
+class _PersonalAccountsState extends State<PersonalAccounts> {
+  bool onHover = false;
+  // int itemToBeAffected = -1;
   @override
   Widget build(BuildContext context) {
     final List<CoinsStatistics> statisticsList = [
