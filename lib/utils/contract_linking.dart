@@ -22,6 +22,7 @@ class ContractLinking extends ChangeNotifier {
   // List of function to be called from our smart contract
   late ContractFunction totalUsers;
   late ContractFunction loginFunction;
+  late ContractFunction signUp;
   late ContractFunction usersMap;
   late ContractFunction totalTransactions;
   late ContractFunction transactionsMap;
@@ -53,6 +54,7 @@ class ContractLinking extends ChangeNotifier {
     depositCoin = contract.function("deposit");
     transferFund = contract.function("transferFund");
     getUserModel = contract.function("getUserModel");
+    signUp = contract.function("signUp");
     notifyListeners();
   }
 

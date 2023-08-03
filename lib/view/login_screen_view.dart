@@ -20,7 +20,10 @@ class _LoginScreenViewState extends State<LoginScreenView> {
   final TextEditingController _tracerID = TextEditingController();
   final TextEditingController _userName = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  final TextEditingController _visaCard = TextEditingController();
+  final TextEditingController _bio = TextEditingController();
   // List<String> loginMessage = ["Successful Login", "Invalid Creditnails"];
+  bool isSingup = false;
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +125,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                         //     style: TextStyle(color: noramlText, fontSize: 14),
                         //   ),
                         // ),
-                        _builLoginForm(),
+                        isSingup ? _buildSignupForm() : _builLoginForm(),
                       ],
                     ),
                   ),
@@ -249,6 +252,120 @@ class _LoginScreenViewState extends State<LoginScreenView> {
     );
   }
 
+  Form _buildSignupForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(bottom: 12.0),
+            child: Text(
+              "Fill to Sing-Up ...",
+              style: TextStyle(color: Colors.white, fontSize: 14),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: CustomTextFormField(
+              controller: _userName,
+              hintText: "Enter Username..",
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return "Please Enter Username";
+                }
+                return null;
+              },
+              icon: const Icon(
+                Icons.person,
+                color: Color(0xff14162E),
+              ),
+              hintTextStyle:
+                  const TextStyle(color: Color(0xff4F555A), fontSize: 12),
+            ),
+          ),
+          CustomTextFormField(
+            controller: _bio,
+            hintText: "Enter Bio..",
+            icon: const Icon(
+              Icons.info,
+              color: Color(0xff14162E),
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Please Enter Bio";
+              }
+              return null;
+            },
+            // isPassword: true,
+            hintTextStyle:
+                const TextStyle(color: Color(0xff4F555A), fontSize: 12),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: CustomTextFormField(
+              controller: _password,
+              hintText: "Enter Password..",
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return "Please Enter Password";
+                }
+                return null;
+              },
+              isPassword: true,
+              hintTextStyle:
+                  const TextStyle(color: Color(0xff4F555A), fontSize: 12),
+            ),
+          ),
+          CustomTextFormField(
+            controller: _visaCard,
+            hintText: "Enter Visa Card..",
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Please Enter Visa Card";
+              }
+              return null;
+            },
+            icon: const Icon(
+              Icons.credit_card_outlined,
+              color: Color(0xff14162E),
+            ),
+            hintTextStyle:
+                const TextStyle(color: Color(0xff4F555A), fontSize: 12),
+          ),
+          Consumer<LoginViewModel>(builder: (context, loginViewModel, child) {
+            return CustomButton(
+              buttonName: "Sign-Up",
+              isLoading: loginViewModel.state,
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  // loginViewModel.setLoadingState(LoadingState.loading);
+                  //Now signing
+
+                  await loginViewModel.signUp(_userName.text, _bio.text,
+                      _password.text, _visaCard.text);
+                  // adding future delay for fun
+                  Future.delayed(const Duration(seconds: 2), () {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            "Registration Completed Successful Your Tracer No is : ${loginViewModel.tracerNo}")));
+                    loginViewModel.setLoadingState(LoadingState.intial);
+                    _userName.clear();
+                    _bio.clear();
+                    _password.clear();
+                    _visaCard.clear();
+                  });
+                }
+                // clearing fields
+                // loginViewModel.cleartInputs(_userName, _password);
+              },
+            );
+          })
+        ],
+      ),
+    );
+  }
+
   Row _buildTopMenu(Color noramlText, Size size) {
     return Row(
       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -263,10 +380,16 @@ class _LoginScreenViewState extends State<LoginScreenView> {
           width: size.width * 0.05,
         ),
 
-        Text(
-          "Sign in",
-          style: TextStyle(
-            color: noramlText,
+        InkWell(
+          onTap: () {
+            isSingup = !isSingup;
+            setState(() {});
+          },
+          child: Text(
+            isSingup ? "Sign-Up" : "Sign in",
+            style: TextStyle(
+              color: noramlText,
+            ),
           ),
         ),
         SizedBox(

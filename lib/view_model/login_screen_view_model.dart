@@ -4,8 +4,10 @@ import 'package:crypto_statistics/model/user_model.dart';
 import 'package:crypto_statistics/utils/contract_linking.dart';
 import 'package:crypto_statistics/utils/enums.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:web3dart/web3dart.dart';
 
 class LoginViewModel extends ChangeNotifier {
+  late int tracerNo;
   UserModel? userModel;
   bool successfulLogin = false;
   LoadingState state = LoadingState.intial;
@@ -52,8 +54,38 @@ class LoginViewModel extends ChangeNotifier {
         print(userModel);
       }
     } catch (e) {
-      log(e.toString() + "Hello");
+      log(e.toString());
     }
     notifyListeners();
+  }
+
+  Future<void> signUp(String _userName, String _userBio, String _userPass,
+      String _userVisa) async {
+    setLoadingState(LoadingState.loading);
+    await link.intialize();
+    try {
+      await link.client.sendTransaction(
+          link.credintails,
+          Transaction.callContract(
+              contract: link.contract,
+              function: link.signUp,
+              parameters: [_userName, _userBio, _userPass, _userVisa]),
+          chainId: 1337);
+      final response = await link.client
+          .call(contract: link.contract, function: link.totalUsers, params: []);
+      if (response.isNotEmpty) {
+        tracerNo = (response[0].toInt() - 1);
+        print(tracerNo);
+        print(response[0]);
+        print("--------");
+        print(response);
+        setLoadingState(LoadingState.loaded);
+        notifyListeners();
+      } else {
+        print("kljhgfghjkl;kjhgfghjklkfghjkl");
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }
