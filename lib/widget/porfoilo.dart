@@ -2,6 +2,7 @@ import 'package:crypto_statistics/model/portfoilo_model.dart';
 import 'package:crypto_statistics/utils/enums.dart';
 import 'package:crypto_statistics/view_model/dashboard_screen_view_model.dart';
 import 'package:crypto_statistics/widget/loading_dashboard_widgets.dart';
+import 'package:currency_formatter/currency_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -55,6 +56,13 @@ class _PersonalAccountsState extends State<PersonalAccounts> {
   }
 
   Widget _buildMyPortfoilo(CoinModel _coinModel, int index) {
+    //    CurrencyFormatterSettings noSetting = CurrencyFormatterSettings(
+    //   symbol: '',
+    //   symbolSide: SymbolSide.left,
+    //   thousandSeparator: '.',
+    //   decimalSeparator: ',',
+    //   symbolSeparator: ' ',
+    // );
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: Row(
@@ -78,9 +86,12 @@ class _PersonalAccountsState extends State<PersonalAccounts> {
                   style: const TextStyle(
                       color: Color(0xffFFFFFF), fontWeight: FontWeight.bold),
                 ),
-                const Text(
-                  "\$ 0",
-                  style: TextStyle(color: Color(0xff9E9E9E)),
+                Text(
+                  CurrencyFormatter.format(
+                      context.read<DashboardViewModel>().getPriceInDollar(
+                          _coinModel.coinName, _coinModel.coinAmount.toInt()),
+                      CurrencyFormatterSettings.usd),
+                  style: const TextStyle(color: Color(0xff9E9E9E)),
                 ),
               ],
             ),

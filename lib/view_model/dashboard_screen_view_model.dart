@@ -44,10 +44,22 @@ class DashboardViewModel extends ChangeNotifier {
     return _liveMarketList;
   }
 
+  double getPriceInDollar(String _coin, int _amount) {
+    try {
+      return _liveMarketList
+              .firstWhere((element) =>
+                  element.name.toLowerCase() == _coin.toLowerCase())
+              .currentPrice *
+          _amount;
+    } catch (e) {
+      return 0.0;
+    }
+  }
+
   Future<void> fetchUserPortfolo(BuildContext ctx) async {
-    print("Fetching from portfoilo");
-    print("Fetching from portfoilo");
-    print("Fetching from portfoilo");
+    // print("Fetching from portfoilo");
+    // print("Fetching from portfoilo");
+    // print("Fetching from portfoilo");
     _userCoinList.clear();
     _filteredList.clear();
     setLoadingState(LoadingState.loading);
