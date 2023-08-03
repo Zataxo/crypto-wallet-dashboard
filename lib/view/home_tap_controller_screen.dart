@@ -2,6 +2,8 @@ import 'package:crypto_statistics/model/side_menu_model.dart';
 import 'package:crypto_statistics/utils/util_logic.dart';
 import 'package:crypto_statistics/view/dashboard_screen_view.dart';
 import 'package:crypto_statistics/view/transactions_screen_view.dart';
+import 'package:crypto_statistics/view_model/dashboard_screen_view_model.dart';
+import 'package:crypto_statistics/view_model/transaction_screen_view_model.dart';
 import 'package:crypto_statistics/widget/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -95,6 +97,11 @@ class _HomeTapControllerState extends State<HomeTapController> {
       onTap: () {
         selectedComponent = index;
         setState(() {});
+        if (index == 0) {
+          context.read<DashboardViewModel>().fetchUserPortfolo(context);
+        } else {
+          context.read<TransactionViewModel>().fetchTransactions(context);
+        }
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 15),

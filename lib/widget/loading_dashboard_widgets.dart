@@ -11,9 +11,16 @@ class LoadingDashboard extends StatefulWidget {
 class _LoadingDashboardState extends State<LoadingDashboard> {
   @override
   Widget build(BuildContext context) {
-    return LoadingAnimationWidget.inkDrop(
-      color: const Color(0xff64CFF9),
-      size: 50,
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LoadingAnimationWidget.inkDrop(
+            color: const Color(0xff64CFF9),
+            size: 50,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,9 @@
+import 'package:crypto_statistics/utils/contract_linking.dart';
 import 'package:crypto_statistics/utils/util_logic.dart';
 import 'package:crypto_statistics/view/login_screen_view.dart';
 import 'package:crypto_statistics/view_model/dashboard_screen_view_model.dart';
+import 'package:crypto_statistics/view_model/login_screen_view_model.dart';
+import 'package:crypto_statistics/view_model/transaction_screen_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,10 +20,19 @@ class Dashboard extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+          create: (_) => ContractLinking(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => UtilLogic(),
         ),
         ChangeNotifierProvider(
-          create: (_) => DashboardViewModel(),
+          create: (_) => LoginViewModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DashboardViewModel(context),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TransactionViewModel(context),
         ),
       ],
       child: Builder(builder: (context) {

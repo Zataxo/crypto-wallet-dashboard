@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class UtilLogic with ChangeNotifier {
   // bool isDarkMood = false;
   bool isPasswordObsecure = true;
-  bool isButtonLoading = false;
+  // bool isButtonLoading = false;
   bool isinfoVisible = false;
 
   // void changeMood() {
@@ -16,15 +16,15 @@ class UtilLogic with ChangeNotifier {
     notifyListeners();
   }
 
-  void setButtonLoading() {
-    isButtonLoading = true;
-    notifyListeners();
-  }
+  // void setButtonLoading() {
+  //   isButtonLoading = true;
+  //   notifyListeners();
+  // }
 
-  void stopButtonLoading() {
-    isButtonLoading = false;
-    notifyListeners();
-  }
+  // void stopButtonLoading() {
+  //   isButtonLoading = false;
+  //   notifyListeners();
+  // }
 
   void showUserInfo() {
     isinfoVisible = !isinfoVisible;

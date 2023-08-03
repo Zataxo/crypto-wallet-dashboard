@@ -1,5 +1,6 @@
 import 'package:crypto_statistics/utils/enums.dart';
-import 'package:crypto_statistics/view_model/dashboard_screen_view_model.dart';
+import 'package:crypto_statistics/view_model/login_screen_view_model.dart';
+import 'package:crypto_statistics/view_model/transaction_screen_view_model.dart';
 import 'package:crypto_statistics/widget/custom_drop_down.dart';
 import 'package:crypto_statistics/widget/custom_text_from_field.dart';
 import 'package:crypto_statistics/widget/custome_button.dart';
@@ -32,6 +33,8 @@ class _NewTransactionDialogState extends State<NewTransactionDialog> {
   final _amount = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    BigInt accountID = context.read<LoginViewModel>().userModel!.accountID;
+
     final size = MediaQuery.of(context).size;
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -43,9 +46,12 @@ class _NewTransactionDialogState extends State<NewTransactionDialog> {
           borderRadius: BorderRadius.circular(15),
           color: const Color(0xff1B2028),
         ),
-        child: context.watch<DashboardViewModel>().state ==
-                    LoadingState.loading &&
-                context.watch<DashboardViewModel>().state != LoadingState.intial
+        child: context.watch<TransactionViewModel>().state !=
+                    LoadingState.loaded &&
+                context
+                    .watch<TransactionViewModel>()
+                    .getUserTransaction(accountID, false)
+                    .isEmpty
             ? const Center(child: LoadingDialogs())
             : _buildSendMoneyForm(context),
       ),
@@ -163,29 +169,31 @@ class _NewTransactionDialogState extends State<NewTransactionDialog> {
             child: Row(
               children: [
                 Expanded(
-                    child: CustomButton(
-                  buttonName: "Transfer",
-                  buttonColor: const Color(0xff1ECB4F),
-                  icon: const Icon(
-                    Icons.send,
-                    color: Color(0xffFFFFFF),
+                    child: Consumer<TransactionViewModel>(
+                  builder: (context, transactionViewModel, child) =>
+                      CustomButton(
+                    buttonName: "Transfer",
+                    buttonColor: const Color(0xff1ECB4F),
+                    icon: const Icon(
+                      Icons.send,
+                      color: Color(0xffFFFFFF),
+                    ),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // wait for view model
+                        await transactionViewModel.transferFund(
+                            context,
+                            BigInt.from(int.parse(_sender.text)),
+                            BigInt.from(int.parse(_receiver.text)),
+                            BigInt.from(int.parse(_amount.text)),
+                            selectedValue!.toLowerCase());
+
+                        _sender.clear();
+                        _receiver.clear();
+                        _amount.clear();
+                      }
+                    },
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // wait for view model
-                      print("Before Set Loading");
-                      context
-                          .read<DashboardViewModel>()
-                          .setLoadingState(LoadingState.loading);
-                      print("Set loading");
-                      Future.delayed(const Duration(seconds: 4), () {
-                        context
-                            .read<DashboardViewModel>()
-                            .setLoadingState(LoadingState.loaded);
-                      });
-                      print("Loaded");
-                    }
-                  },
                 )),
                 Expanded(
                     child: CustomButton(

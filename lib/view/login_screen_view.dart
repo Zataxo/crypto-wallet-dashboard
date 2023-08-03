@@ -1,5 +1,6 @@
-import 'package:crypto_statistics/utils/util_logic.dart';
+import 'package:crypto_statistics/utils/enums.dart';
 import 'package:crypto_statistics/view/home_tap_controller_screen.dart';
+import 'package:crypto_statistics/view_model/login_screen_view_model.dart';
 import 'package:crypto_statistics/widget/custom_text_from_field.dart';
 import 'package:crypto_statistics/widget/custome_button.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,11 @@ class LoginScreenView extends StatefulWidget {
 
 class _LoginScreenViewState extends State<LoginScreenView> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _tracerID = TextEditingController();
   final TextEditingController _userName = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  // List<String> loginMessage = ["Successful Login", "Invalid Creditnails"];
+
   @override
   Widget build(BuildContext context) {
     Color noramlText = const Color(0xffFFFFFF);
@@ -109,7 +113,7 @@ class _LoginScreenViewState extends State<LoginScreenView> {
                         //   style: TextStyle(color: noramlText, fontSize: 18),
                         // ),
                         SizedBox(
-                          height: size.height * 0.3,
+                          height: size.height * 0.2,
                         ),
                         // Padding(
                         //   padding: const EdgeInsets.only(bottom: 12.0),
@@ -145,16 +149,16 @@ class _LoginScreenViewState extends State<LoginScreenView> {
             ),
           ),
           CustomTextFormField(
-            controller: _userName,
-            hintText: "Enter Username..",
+            controller: _tracerID,
+            hintText: "Enter Tracer ID..",
             validator: (String? value) {
               if (value == null || value.isEmpty) {
-                return "Please Enter Username";
+                return "Please Enter Tracer ID";
               }
               return null;
             },
             icon: const Icon(
-              Icons.person,
+              Icons.wordpress,
               color: Color(0xff14162E),
             ),
             hintTextStyle:
@@ -163,42 +167,82 @@ class _LoginScreenViewState extends State<LoginScreenView> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: CustomTextFormField(
-              controller: _password,
-              hintText: "Enter Password..",
+              controller: _userName,
+              hintText: "Enter Username..",
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
-                  return "Please Enter Password";
+                  return "Please Enter Username";
                 }
                 return null;
               },
-              isPassword: true,
+              icon: const Icon(
+                Icons.person,
+                color: Color(0xff14162E),
+              ),
               hintTextStyle:
                   const TextStyle(color: Color(0xff4F555A), fontSize: 12),
             ),
           ),
+          CustomTextFormField(
+            controller: _password,
+            hintText: "Enter Password..",
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Please Enter Password";
+              }
+              return null;
+            },
+            isPassword: true,
+            hintTextStyle:
+                const TextStyle(color: Color(0xff4F555A), fontSize: 12),
+          ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: CustomButton(
-              buttonName: "Sign In",
-              isLoading: context.watch<UtilLogic>().isButtonLoading,
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  // wait for view model
-                  context.read<UtilLogic>().setButtonLoading();
-                  Future.delayed(
-                    const Duration(seconds: 2),
-                    () {
-                      context.read<UtilLogic>().stopButtonLoading();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeTapController(),
-                          ));
-                    },
-                  );
-                }
-              },
-            ),
+            child: Consumer<LoginViewModel>(
+                builder: (context, loginViewModel, child) {
+              var snackBar = const SnackBar(
+                  content: Text(
+                "Invalid Credintails",
+                style: TextStyle(color: Color(0xffFFFFFF)),
+              ));
+              return CustomButton(
+                buttonName: "Sign In",
+                isLoading: loginViewModel.state,
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    // loginViewModel.setLoadingState(LoadingState.loading);
+                    //Now signing
+                    await loginViewModel.singIn(
+                        BigInt.from(int.parse(_tracerID.text)),
+                        _userName.text,
+                        _password.text);
+                    // adding future delay for fun
+                    Future.delayed(const Duration(seconds: 2), () {
+                      if (loginViewModel.state == LoadingState.loaded &&
+                          loginViewModel.successfulLogin) {
+                        // context
+                        //     .read<DashboardViewModel>()
+                        //     .fetchUserPortfolo(context);
+                        // context
+                        //     .read<TransactionViewModel>()
+                        //     .fetchTransactions(context);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeTapController(),
+                            ));
+                        loginViewModel.setLoadingState(LoadingState.intial);
+                      } else {
+                        loginViewModel.setLoadingState(LoadingState.intial);
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      }
+                    });
+                  }
+                  // clearing fields
+                  // loginViewModel.cleartInputs(_userName, _password);
+                },
+              );
+            }),
           )
         ],
       ),

@@ -2,8 +2,12 @@ import 'package:crypto_statistics/dialog/new_transaction_dialog.dart';
 import 'package:crypto_statistics/model/pop_menu_model.dart';
 import 'package:crypto_statistics/utils/util_logic.dart';
 import 'package:crypto_statistics/view/login_screen_view.dart';
+import 'package:crypto_statistics/view_model/dashboard_screen_view_model.dart';
+import 'package:crypto_statistics/view_model/login_screen_view_model.dart';
+import 'package:crypto_statistics/view_model/transaction_screen_view_model.dart';
 import 'package:crypto_statistics/widget/custom_pop_menu.dart';
 import 'package:crypto_statistics/widget/custom_text_from_field.dart';
+import 'package:crypto_statistics/widget/reload_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +24,7 @@ class _DashboardHeaderState extends State<DashboardHeader> {
   final TextEditingController _search = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    // final dash = Provider.of<LoginViewModel>(context);
     final size = MediaQuery.of(context).size;
 
     return Row(
@@ -54,15 +59,24 @@ class _DashboardHeaderState extends State<DashboardHeader> {
             ),
           ),
         ),
+        ReloadButton(
+          onTap: () {
+            _reloadAll();
+          },
+        ),
         const Spacer(),
         _buildNotificationButton(),
         const Spacer(),
         _builUserPhotoPlaceHolder(),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.0),
-          child: Text(
-            "Hassan Ismat",
-            style: TextStyle(color: Color(0xffFFFFFF)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Selector<LoginViewModel, String>(
+            selector: (context, listenTo) =>
+                listenTo.userModel?.userName ?? "Not signed yet",
+            builder: (context, userName, child) => Text(
+              userName,
+              style: const TextStyle(color: Color(0xffFFFFFF)),
+            ),
           ),
         ),
         CustomPopMenu(
@@ -98,6 +112,8 @@ class _DashboardHeaderState extends State<DashboardHeader> {
           icon: Icons.logout_outlined,
           desc: "Logout",
           onPressed: () {
+            // ctx.read<LoginViewModel>()
+            ctx.read<DashboardViewModel>().logOut();
             Navigator.pushReplacement(
                 ctx,
                 MaterialPageRoute(
@@ -142,5 +158,11 @@ class _DashboardHeaderState extends State<DashboardHeader> {
         fit: BoxFit.cover,
       ),
     );
+  }
+
+  void _reloadAll() {
+    context.read<DashboardViewModel>().fetchUserPortfolo(context);
+    context.read<DashboardViewModel>().fetchLiveData();
+    context.read<TransactionViewModel>().fetchTransactions(context);
   }
 }

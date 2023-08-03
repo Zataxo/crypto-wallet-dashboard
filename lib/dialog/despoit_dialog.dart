@@ -1,5 +1,6 @@
 import 'package:crypto_statistics/utils/enums.dart';
-import 'package:crypto_statistics/view_model/dashboard_screen_view_model.dart';
+import 'package:crypto_statistics/view_model/login_screen_view_model.dart';
+import 'package:crypto_statistics/view_model/transaction_screen_view_model.dart';
 import 'package:crypto_statistics/widget/custom_drop_down.dart';
 import 'package:crypto_statistics/widget/custom_text_from_field.dart';
 import 'package:crypto_statistics/widget/custome_button.dart';
@@ -27,11 +28,13 @@ class _DepositDialogState extends State<DepositDialog> {
   ];
   String? selectedValue;
   final _formKey = GlobalKey<FormState>();
-  final _sender = TextEditingController();
+  // final _sender = TextEditingController();
   final _receiver = TextEditingController();
   final _amount = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    BigInt accountID = context.read<LoginViewModel>().userModel!.accountID;
+
     final size = MediaQuery.of(context).size;
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -43,11 +46,12 @@ class _DepositDialogState extends State<DepositDialog> {
           borderRadius: BorderRadius.circular(15),
           color: const Color(0xff1B2028),
         ),
-        child: context.watch<DashboardViewModel>().state ==
-                    LoadingState.loading &&
-                context.watch<DashboardViewModel>().state != LoadingState.intial
-            ? const Center(child: LoadingDialogs())
-            : _buildDepositForm(context),
+        child: Consumer<TransactionViewModel>(
+            builder: (context, value, child) =>
+                value.state == LoadingState.loading &&
+                        value.getUserTransaction(accountID, false).isEmpty
+                    ? const LoadingDialogs()
+                    : _buildDepositForm(context)),
       ),
     );
   }
@@ -146,29 +150,43 @@ class _DepositDialogState extends State<DepositDialog> {
             child: Row(
               children: [
                 Expanded(
-                    child: CustomButton(
-                  buttonName: "Transfer",
-                  buttonColor: const Color(0xff1ECB4F),
-                  icon: const Icon(
-                    Icons.send,
-                    color: Color(0xffFFFFFF),
+                    child: Consumer<TransactionViewModel>(
+                  builder: (context, transactionViewModel, child) =>
+                      CustomButton(
+                    buttonName: "Transfer",
+                    buttonColor: const Color(0xff1ECB4F),
+                    icon: const Icon(
+                      Icons.send,
+                      color: Color(0xffFFFFFF),
+                    ),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        // wait for view model
+                        // print("Before Set Loading");
+                        // context
+                        //     .read<DashboardViewModel>()
+                        //     .setLoadingState(LoadingState.loading);
+                        // print("Set loading");
+                        // Future.delayed(const Duration(seconds: 4), () {
+                        //   context
+                        //       .read<DashboardViewModel>()
+                        //       .setLoadingState(LoadingState.loaded);
+                        // });
+                        // print("Loaded")
+                        await transactionViewModel.deposit(
+                            context,
+                            BigInt.from(int.parse(_receiver.text)),
+                            BigInt.from(int.parse(_amount.text)),
+                            selectedValue!.toLowerCase());
+                        _receiver.clear();
+                        _amount.clear();
+                        // Navigator.pop(context);
+                        // print(_receiver.text);
+                        // print(_amount.text);
+                        // print(selectedValue);
+                      }
+                    },
                   ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // wait for view model
-                      print("Before Set Loading");
-                      context
-                          .read<DashboardViewModel>()
-                          .setLoadingState(LoadingState.loading);
-                      print("Set loading");
-                      Future.delayed(const Duration(seconds: 4), () {
-                        context
-                            .read<DashboardViewModel>()
-                            .setLoadingState(LoadingState.loaded);
-                      });
-                      print("Loaded");
-                    }
-                  },
                 )),
                 Expanded(
                     child: CustomButton(

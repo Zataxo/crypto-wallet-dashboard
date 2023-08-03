@@ -1,3 +1,4 @@
+import 'package:crypto_statistics/utils/enums.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatefulWidget {
@@ -13,7 +14,7 @@ class CustomButton extends StatefulWidget {
   final Widget? icon;
   final String buttonName;
   final Function()? onPressed;
-  final bool? isLoading;
+  final LoadingState? isLoading;
   final Color? buttonColor;
   // late bool? isPressed = false;
   @override
@@ -35,7 +36,7 @@ class _CustomButtonState extends State<CustomButton> {
           onPressed: widget.onPressed,
           child: widget.icon == null
               ? Center(
-                  child: widget.isLoading == true
+                  child: widget.isLoading != LoadingState.intial
                       ? const CircularProgressIndicator(
                           color: Colors.white,
                         )

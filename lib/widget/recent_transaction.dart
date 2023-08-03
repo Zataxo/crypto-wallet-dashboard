@@ -1,5 +1,7 @@
 import 'package:crypto_statistics/table/recent_transactions_table.dart';
+import 'package:crypto_statistics/view_model/transaction_screen_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LatestTransactions extends StatelessWidget {
   const LatestTransactions({
@@ -18,8 +20,8 @@ class LatestTransactions extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Expanded(
+        children: [
+          const Expanded(
             flex: 0,
             child: Text(
               "Recent Transaction",
@@ -27,7 +29,15 @@ class LatestTransactions extends StatelessWidget {
                   color: Color(0xffFFFFFF), fontWeight: FontWeight.bold),
             ),
           ),
-          Expanded(flex: 1, child: RecentTransactionsTable())
+          Expanded(
+            flex: 1,
+            child: Consumer<TransactionViewModel>(
+              builder: (context, transactionViewModel, child) =>
+                  const RecentTransactionsTable(
+                isRecent: true,
+              ),
+            ),
+          )
         ],
       ),
     );

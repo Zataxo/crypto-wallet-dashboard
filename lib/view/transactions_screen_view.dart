@@ -46,9 +46,10 @@ class _TransactionsScreenViewState extends State<TransactionsScreenView> {
                           // ),
                         ),
                         child: const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: RecentTransactionsTable(),
-                        ),
+                            padding: EdgeInsets.all(12.0),
+                            child: RecentTransactionsTable(
+                              isRecent: false,
+                            )),
                       ),
                     ),
                   ],
